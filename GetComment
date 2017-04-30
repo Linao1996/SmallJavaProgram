@@ -1,0 +1,42 @@
+package pac2;
+
+import java.util.*;
+import java.io.*;
+import java.nio.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;//for regex expression
+
+public class GetComment {
+
+    String getFile(String fileName) {
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {// open a file, using try with resource;
+            String line = "";
+            while ((line = bufferedReader.readLine()) != null) {
+                content.append(line + "\n");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return content.toString();
+    }
+/* this is block comment
+
+ */
+    public static void main(String[] args) {
+        String file = "./src/pac2/GetComment.java";
+        GetComment getComment = new GetComment();
+        String content = getComment.getFile(file);
+        String regex = "(?m)[/][/].+\n|(?s)/[*].*[*]/";
+//      String regex = ".*";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(content);
+        while (matcher.find()) {
+            System.out.printf("\t%s\n", matcher.group());
+        }
+
+
+    }
+}
